@@ -16,20 +16,4 @@ public class CustomFeignConfig {
   public LoggingResponseInterceptor loggingResponseInterceptor() {
     return new LoggingResponseInterceptor();
   }
-
-  //  @Bean
-  //  public Retryer retryer() {
-  //    return new Retryer.Default(initialInterval, maxInterval, maxAttempts);
-  //  }
-
-  //
-  //  @Bean
-  //  public Retryer exponentialBackOffRetryer() {
-  //    return new ExponentialBackOffRetryer(initialInterval, multiplier, maxAttempts, maxInterval);
-  //  }
-
-  //  @Bean
-  //  public FeignMetricsCapability feignMetricsCapability() {
-  //    return new FeignMetricsCapability(meterRegistry, observationRegistry);
-  //  }
 }

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
+  //  HTTP OpenTelemetry Exporter
   //  @Bean
   //  OtlpHttpSpanExporter otlpHttpSpanExporter(@Value("${tracing.url}") String url) {
   //    return OtlpHttpSpanExporter.builder()
@@ -18,6 +19,7 @@ public class AppConfig {
   //        .build();
   //  }
 
+  //  GRPC OpenTelemetry Exporter
   @Bean
   OtlpGrpcSpanExporter otlpGrpcSpanExporter(@Value("${tracing.url}") String url) {
     return OtlpGrpcSpanExporter.builder()
