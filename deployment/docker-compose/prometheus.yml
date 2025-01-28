@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'feignclient'
+    scrape_interval: 5s
+    scheme: http
+    metrics_path: '/monitoring/prometheus'
+    static_configs:
+      - targets:
+        - 'feignclient:8080'

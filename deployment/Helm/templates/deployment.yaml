@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  labels:
+    app: {{ .Values.global.nameOverride }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.nameOverride }}
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.app.env.normal.PORT | quote }}
+        prometheus.io/path: {{ .Values.app.monitoring.metrics.path }}
+      labels:
+        app: {{ .Values.global.nameOverride }}
+        version: {{ .Values.app.version }}
+    spec:
+      imagePullSecrets:
+        - name: docker-secret
+      containers:
+        - name: feignclient
+          image: {{ .Values.app.image.repository | quote }}
+          imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.app.env.normal.PORT }}
+          env:
+            - name: SERVER_PORT
+              value: {{ .Values.app.env.normal.PORT | quote }}
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

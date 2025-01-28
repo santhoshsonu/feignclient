@@ -1,0 +1,35 @@
+# Global settings
+global:
+  nameOverride: feignclient
+  fullnameOverride: feignclient
+
+
+imageCredentials:
+  registry: docker.io
+  username: armosdocker
+  password: "S@nthosh#0802"
+  email: santhosheshwaramma@gmail.com
+
+deployment:
+  name: feignclient-deployment
+
+replicaCount: 1
+service:
+  name: feignclient-svc
+  type: ClusterIP
+  port: 80
+  targetPort: 9000 # should be same as app port
+
+app:
+  version: "v1"
+  image:
+    repository: "feignclient:latest"
+    pullPolicy: IfNotPresent
+  monitoring:
+    enabled: true
+    metrics:
+      path: "/monitoring/prometheus"
+  env:
+    normal:
+      PORT: 9000
+      REMOTE_URL: "http://localhost:3000"

@@ -1,0 +1,10 @@
+# Ignore gradle stuff
+.gradle
+build
+out
+
+# Ignore IntelliJ project files
+.idea
+
+# Ignore maven stuff
+!*/*/*/target/*.jar

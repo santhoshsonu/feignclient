@@ -1,0 +1,88 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: feignclient-app
+  cloud:
+    openfeign:
+      micrometer:
+        enabled: true
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          sampleApi:
+            url: ${REMOTE_URL:http://localhost:3000}
+            loggerLevel: full
+            connectTimeout: 5000
+            readTimeout: 5000
+
+resilience4j.circuitbreaker:
+  instances:
+    sampleApiGet:
+      registerHealthIndicator: true
+      minimumNumberOfCalls: 5
+      failureRateThreshold: 50
+      waitDurationInOpenState: 60s
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowSize: 5
+      slidingWindowType: COUNT_BASED
+      eventConsumerBufferSize: 10
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 1s
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 1.25
+  instances:
+    sampleApiGet:
+      baseConfig: default
+      registerHealthIndicator: true
+
+tracing:
+  url: ${TRACING_ENDPOINT:http://localhost:4317/v1/traces}
+
+# traceID and spanId are predefined MDC keys - we want the logs to include them
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+
+# Actuator endpoints configuration
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      base-path: /monitoring
+      exposure:
+        include: health,info,circuitbreakers,circuitbreakerevents,retries,retryevents,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true
+    java:
+      enabled: false
+    os:
+      enabled: false
+  health:
+    circuitbreakers:
+      enabled: true
+    retries:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
